@@ -3,8 +3,8 @@
 # Usage: gh issue-branch
 # Description: Create a new issue and checkout to a branch named after it
 
-gh alias delete issue-branch 2>/dev/null
-gh alias set issue-branch '!f() {
+gh alias delete issue-branch &>/dev/null
+gh alias set issue-branch &>/dev/null '!f() {
   # 임시 파일 생성
   TMPFILE=$(mktemp)
   # 현재 브랜치
@@ -70,4 +70,4 @@ EOF
   echo ""
   echo "✅ Issue #${ISSUE_NUMBER} created: $ISSUE_URL"
   echo "✅ Switched to new branch: $BRANCH_NAME"
-}; f'
+}; f "$@"'

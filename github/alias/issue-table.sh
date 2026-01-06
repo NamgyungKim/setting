@@ -3,8 +3,8 @@
 # Usage: gh issue-table
 # Description: Display open issues in a formatted table
 
-gh alias delete issue-table 2>/dev/null
-gh alias set issue-table '!{
+gh alias delete issue-table &>/dev/null
+gh alias set issue-table &>/dev/null '!{
 printf "ID\tTITLE\tASSIGNEE\tLABELS\tSTATE\tURL\n"
 gh issue list --state open \
   --json number,title,assignees,labels,state,url \
