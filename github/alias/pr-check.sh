@@ -3,8 +3,8 @@
 # Usage: gh pr-check
 # Description: Push current branch, create PR, and check CI status
 
-gh alias delete pr-check 2>/dev/null
-gh alias set pr-check '!f() {
+gh alias delete pr-check &>/dev/null
+gh alias set pr-check &>/dev/null '!f() {
   # 현재 브랜치 push
   BRANCH=$(git symbolic-ref --short HEAD)
   echo "Pushing current branch: $BRANCH..."
@@ -110,13 +110,4 @@ EOF
 
   # PR URL 출력
   echo "$PR_URL"
-
-  # 브랜치 삭제 여부 확인
-  read -p "Delete branch '\''$head'\''? (y/N): " del
-  if [ "$del" = "y" ] || [ "$del" = "Y" ]; then
-    git checkout "$base"
-    git branch -D "$head"
-    git push origin --delete "$head" 2>/dev/null
-    echo "✅ Branch '\''$head'\'' deleted (local & remote)."
-  fi
-}; f'
+}; f "$@"'
