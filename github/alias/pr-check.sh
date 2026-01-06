@@ -21,9 +21,21 @@ gh alias set pr-check '!f() {
   read -p "Enter base branch (default: $default_base): " base
   base=${base:-$default_base}
 
+  # base 브랜치 존재 확인
+  if ! git rev-parse --verify "origin/$base" >/dev/null 2>&1; then
+    echo "❌ Branch '\''$base'\'' does not exist."
+    return 1
+  fi
+
   # head 브랜치 입력 (기본값: $CURRENT_BRANCH)
   read -p "Enter head branch (default: $CURRENT_BRANCH): " head
   head=${head:-$CURRENT_BRANCH}
+
+  # head 브랜치 존재 확인
+  if ! git rev-parse --verify "$head" >/dev/null 2>&1; then
+    echo "❌ Branch '\''$head'\'' does not exist."
+    return 1
+  fi
 
   # 브랜치명에서 이슈 번호 추출 (예: User/3 → 3)
   ISSUE=$(echo "$BRANCH" | awk -F/ '\''NF>1 && $NF ~ /^[0-9]+$/ {print $NF}'\'')
@@ -32,33 +44,40 @@ gh alias set pr-check '!f() {
   TMPFILE=$(mktemp)
 
   # 템플릿 작성
-  if [ -n "$ISSUE" ]; then
-    cat > "$TMPFILE" << EOF
-# 첫 번째 줄: PR 제목 (필수)
-# 세 번째 줄부터: PR 본문 (선택)
-# #으로 시작하는 줄은 무시됩니다
-# :wq 저장 :q! 종료
+  CLOSE_LINE=""
+  [ -n "$ISSUE" ] && CLOSE_LINE="Closes #$ISSUE"
 
-Closes #$ISSUE
-EOF
-  else
-    cat > "$TMPFILE" << EOF
-# 첫 번째 줄: PR 제목 (필수)
-# 세 번째 줄부터: PR 본문 (선택)
-# #으로 시작하는 줄은 무시됩니다
-# :wq 저장 :q! 종료
+  cat > "$TMPFILE" << EOF
+// PR: $head -> $base
+// 첫 번째 줄: PR 제목 (필수)
+// 세 번째 줄부터: PR 본문 (선택)
+// //으로 시작하는 줄은 무시됩니다
+// :wq 저장 :q! 종료
+// -------------------------------------------------
 
+
+$CLOSE_LINE
 EOF
+
+  # 수정 시간 기록
+  BEFORE=$(stat -f %m "$TMPFILE")
+
+  # 에디터 열기 (마지막에서 2번째 줄에서 시작)
+  ${EDITOR:-vim} "+\$-2" "$TMPFILE"
+
+  # 저장 여부 확인
+  AFTER=$(stat -f %m "$TMPFILE")
+  if [ "$BEFORE" = "$AFTER" ]; then
+    echo "❌ Cancelled."
+    rm "$TMPFILE"
+    return 1
   fi
 
-  # 에디터 열기
-  ${EDITOR:-vim} "$TMPFILE"
-
-  # 제목 추출 (# 주석 제외한 첫 번째 비어있지 않은 줄)
-  title=$(grep -v "^#" "$TMPFILE" | grep -v "^$" | head -1)
+  # 제목 추출 (// 주석 제외한 첫 번째 비어있지 않은 줄)
+  title=$(grep -v "^[[:space:]]*//" "$TMPFILE" | grep -v "^[[:space:]]*$" | head -1)
 
   # 본문 추출 (제목 제외한 나머지)
-  body=$(grep -v "^#" "$TMPFILE" | tail -n +2)
+  body=$(grep -v "^[[:space:]]*//" "$TMPFILE" | tail -n +2)
 
   rm "$TMPFILE"
 
