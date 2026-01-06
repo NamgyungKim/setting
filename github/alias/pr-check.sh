@@ -107,7 +107,4 @@ EOF
   # CI / 체크 상태 출력
   echo "Checking CI/CD status..."
   gh pr checks "$PR_NUMBER"
-
-  # PR URL 출력
-  echo "$PR_URL"
 }; f "$@"'
