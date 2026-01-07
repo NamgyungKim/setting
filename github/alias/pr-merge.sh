@@ -38,4 +38,14 @@ gh alias set pr-merge '!f() {
   gh pr merge "$PR" $MERGE_FLAG --delete-branch
 
   echo "✅ PR #$PR merged successfully"
+
+  # 브랜치명에서 이슈 번호 추출 (예: User/issue3 → 3)
+  ISSUE=$(echo "$HEAD" | grep -oE 'issue[0-9]+' | sed 's/issue//')
+
+  # 이슈가 있으면 강제로 닫기
+  if [ -n "$ISSUE" ]; then
+    echo "Closing issue #$ISSUE..."
+    gh issue close "$ISSUE"
+    echo "✅ Issue #$ISSUE closed"
+  fi
 }; f "$@"' >/dev/null
