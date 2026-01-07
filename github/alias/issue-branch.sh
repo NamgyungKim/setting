@@ -15,8 +15,7 @@ gh alias set issue-branch &>/dev/null '!f() {
 // 현재 브랜치: $CURRENT_BRANCH
 // 첫 번째 줄: 이슈 제목 (필수)
 // 세 번째 줄부터: 이슈 본문 (선택)
-// //으로 시작하는 줄은 무시됩니다
-// :wq 저장 :q! 종료
+// //으로 시작하는 줄은 무시됩니다 
 // -------------------------------------------------
 
 EOF
@@ -24,8 +23,8 @@ EOF
   # 수정 시간 기록
   BEFORE=$(stat -f %m "$TMPFILE")
 
-  # 에디터 열기 (마지막 줄에서 시작)
-  ${EDITOR:-vim} + "$TMPFILE"
+  # 에디터 열기
+  ${EDITOR:-nano} "$TMPFILE"
 
   # 저장 여부 확인
   AFTER=$(stat -f %m "$TMPFILE")

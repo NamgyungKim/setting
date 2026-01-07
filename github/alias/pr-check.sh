@@ -51,8 +51,7 @@ gh alias set pr-check &>/dev/null '!f() {
 // PR: $head -> $base
 // 첫 번째 줄: PR 제목 (필수)
 // 세 번째 줄부터: PR 본문 (선택)
-// //으로 시작하는 줄은 무시됩니다
-// :wq 저장 :q! 종료
+// //으로 시작하는 줄은 무시됩니다 
 // -------------------------------------------------
 
 
@@ -62,8 +61,8 @@ EOF
   # 수정 시간 기록
   BEFORE=$(stat -f %m "$TMPFILE")
 
-  # 에디터 열기 (마지막에서 2번째 줄에서 시작)
-  ${EDITOR:-vim} "+\$-2" "$TMPFILE"
+  # 에디터 열기
+  ${EDITOR:-nano} "$TMPFILE"
 
   # 저장 여부 확인
   AFTER=$(stat -f %m "$TMPFILE")
