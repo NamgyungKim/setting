@@ -2,11 +2,17 @@
 
 # gh alias 등록
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-for f in "$SCRIPT_DIR"/*.sh; do
-  [ "$(basename "$f")" = "main.sh" ] && continue
-  bash "$f"
-done
+LIB_FILE="$ROOT_DIR/lib/register-aliases.sh"
+
+if [ ! -f "$LIB_FILE" ]; then
+  echo "❌ Missing lib file: $LIB_FILE" >&2
+  exit 1
+fi
+ 
+source "$LIB_FILE"
+register_aliases "$SCRIPT_DIR"
 
 echo "✅ All gh aliases registered"
 
@@ -19,11 +25,6 @@ ALIASES=(
   "alias gprm='gh pr-merge'"
 )
 
-for a in "${ALIASES[@]}"; do
-  if ! grep -qF "$a" ~/.zshrc 2>/dev/null; then
-    echo "$a" >> ~/.zshrc
-    echo "Added: $a"
-  fi
-done
+set_global_aliases "${ALIASES[@]}"
 
 echo "✅ Shell aliases configured in ~/.zshrc"
