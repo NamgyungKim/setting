@@ -39,10 +39,10 @@ checkbox_select() {
 	}
 
 	_render
-	while IFS= read -rsn1 key; do
+	while IFS= read -rsn1 key </dev/tty; do
 		case "$key" in
 			$'\x1b')
-				read -rsn2 key
+				read -rsn2 key </dev/tty
 				case "$key" in
 					"[A") cursor=$(( (cursor - 1 + count) % count )) ;; # up
 					"[B") cursor=$(( (cursor + 1) % count )) ;;       # down
@@ -100,10 +100,10 @@ radio_select() {
 	}
 
 	_render
-	while IFS= read -rsn1 key; do
+	while IFS= read -rsn1 key </dev/tty; do
 		case "$key" in
 			$'\x1b')
-				read -rsn2 key
+				read -rsn2 key </dev/tty
 				case "$key" in
 					"[A") cursor=$(( (cursor - 1 + count) % count )) ;; # up
 					"[B") cursor=$(( (cursor + 1) % count )) ;;       # down
