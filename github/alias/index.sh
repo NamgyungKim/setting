@@ -1,18 +1,25 @@
 #!/bin/bash
 
 # gh alias 등록
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if [ "${REMOTE:-false}" = true ]; then
+  # shellcheck disable=SC1090
+  source <(curl -fsSL "$BASE_URL/lib/register-aliases.sh")
+  register_aliases_remote "$BASE_URL/github/alias" co issue-branch issue-table pr-check pr-merge
+else
+  SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+  ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-LIB_FILE="$ROOT_DIR/lib/register-aliases.sh"
+  LIB_FILE="$ROOT_DIR/lib/register-aliases.sh"
 
-if [ ! -f "$LIB_FILE" ]; then
-  echo "❌ Missing lib file: $LIB_FILE" >&2
-  exit 1
+  if [ ! -f "$LIB_FILE" ]; then
+    echo "❌ Missing lib file: $LIB_FILE" >&2
+    exit 1
+  fi
+
+  # shellcheck disable=SC1090
+  source "$LIB_FILE"
+  register_aliases "$SCRIPT_DIR"
 fi
- 
-source "$LIB_FILE"
-register_aliases "$SCRIPT_DIR"
 
 echo "✅ All gh aliases registered"
 

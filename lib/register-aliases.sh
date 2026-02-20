@@ -1,5 +1,21 @@
 #!/bin/bash
- 
+
+register_aliases_remote() {
+  local base_url="$1"
+  shift
+  local names=("$@")
+
+  for name in "${names[@]}"; do
+    local content
+    content=$(curl -fsSL "$base_url/$name.sh")
+    printf "Setting up gh alias: %s\n" "$name"
+    gh alias delete "$name" &>/dev/null || true
+    gh alias set "$name" '!f() {
+      '"$content"'
+}; f "$@"'
+  done
+}
+
 register_aliases() {
   local script_dir="$1"
 

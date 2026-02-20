@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-sh "$SCRIPT_DIR/alias/index.sh"
+if [ "${REMOTE:-false}" = true ]; then
+	bash <(curl -fsSL "$BASE_URL/github/alias/index.sh")
+else
+	SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+	sh "$SCRIPT_DIR/alias/index.sh"
+fi
