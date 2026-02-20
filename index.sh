@@ -8,6 +8,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LIB_CHECKBOX="$SCRIPT_DIR/lib/checkbox.sh"
+echo $SCRIPT_DIR
+echo $LIB_CHECKBOX
 
 if [ ! -f "$LIB_CHECKBOX" ]; then
 	echo "❌ Missing lib file: $LIB_CHECKBOX" >&2
