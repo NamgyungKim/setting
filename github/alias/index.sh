@@ -2,8 +2,11 @@
 
 # gh alias 등록
 if [ "${REMOTE:-false}" = true ]; then
+  _tmpdir="$(mktemp -d)"
+  trap 'rm -rf "$_tmpdir"' EXIT
+  curl -fsSL "$BASE_URL/lib/register-aliases.sh" -o "$_tmpdir/register-aliases.sh"
   # shellcheck disable=SC1090
-  source <(curl -fsSL "$BASE_URL/lib/register-aliases.sh")
+  source "$_tmpdir/register-aliases.sh"
   register_aliases_remote "$BASE_URL/github/alias" co issue-branch issue-table pr-check pr-merge
 else
   SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

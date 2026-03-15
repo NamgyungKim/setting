@@ -1,8 +1,11 @@
 #!/bin/bash
 
 if [ "${REMOTE:-false}" = true ]; then
+  _tmpdir="$(mktemp -d)"
+  trap 'rm -rf "$_tmpdir"' EXIT
+  curl -fsSL "$BASE_URL/lib/register-aliases.sh" -o "$_tmpdir/register-aliases.sh"
   # shellcheck disable=SC1090
-  source <(curl -fsSL "$BASE_URL/lib/register-aliases.sh")
+  source "$_tmpdir/register-aliases.sh"
 else
   SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
   ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
