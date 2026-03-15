@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo $BASE_URL
+
 if [ "${REMOTE:-false}" = true ]; then
 	bash <(curl -fsSL "$BASE_URL/github/alias/index.sh")
 else
