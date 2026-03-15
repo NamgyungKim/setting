@@ -33,7 +33,7 @@ else
 	source "$LIB_CHECKBOX"
 fi
 
-selected=$(radio_select "Select items" "brew" "git" "gitHub" | head -n 1)
+selected=$(radio_select "Select items" "brew" "git" "github" | head -n 1)
 
 script="$BASE_URL/$selected/index.sh"
 if [ "$REMOTE" = true ]; then
