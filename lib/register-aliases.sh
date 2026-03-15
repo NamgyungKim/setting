@@ -12,7 +12,7 @@ register_aliases_remote() {
     gh alias delete "$name" &>/dev/null || true
     gh alias set "$name" '!f() {
       '"$content"'
-}; f "$@"'
+}; f "$@"' &>/dev/null
   done
 }
 
@@ -28,10 +28,10 @@ register_aliases() {
     content=$(cat "$file")
     printf "Setting up gh alias: %s\n" "$name"
     
-    gh alias delete "$name" &>/dev/null
-    gh alias set "$name" &>/dev/null '!{
+    gh alias delete "$name" &>/dev/null || true
+    gh alias set "$name" '!f() {
       '"$content"'
-    }; f "$@"'
+}; f "$@"' &>/dev/null
   done
 }
 
