@@ -19,8 +19,11 @@ fi
 LIB_CHECKBOX="$BASE_URL/lib/checkbox.sh"
 
 if [ "$REMOTE" = true ]; then
+	_tmpdir="$(mktemp -d)"
+	trap 'rm -rf "$_tmpdir"' EXIT
+	curl -fsSL "$LIB_CHECKBOX" -o "$_tmpdir/checkbox.sh"
 	# shellcheck disable=SC1090
-	source <(curl -fsSL "$LIB_CHECKBOX")
+	source "$_tmpdir/checkbox.sh"
 else
 	if [ ! -f "$LIB_CHECKBOX" ]; then
 		echo "❌ Missing lib file: $LIB_CHECKBOX" >&2
