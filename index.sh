@@ -42,7 +42,7 @@ if [ "$REMOTE" = true ]; then
 else
 	if [ -f "$script" ]; then
 		echo "➡️  Executing: $script"
-		sh "$script"
+		bash "$script"
 	else
 		echo "❌ Script not found: $script" >&2
 	fi
