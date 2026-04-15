@@ -33,12 +33,12 @@ else
 	source "$LIB_CHECKBOX"
 fi
 
-selected=$(radio_select "Select items" "brew" "git" "github" | head -n 1)
+selected=$(radio_select "Select items" "brew" "git" "github" "phase")
 
 script="$BASE_URL/$selected/index.sh"
 if [ "$REMOTE" = true ]; then
 	echo "➡️  Executing: $script"
-	bash <(curl -fsSL "$script")
+	bash -c "$(curl -fsSL "$script")"
 else
 	if [ -f "$script" ]; then
 		echo "➡️  Executing: $script"
